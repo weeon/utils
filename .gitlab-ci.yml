@@ -3,8 +3,7 @@ services:
   - docker:dind
 stages:
   - test
-  - notify_fail
-  - notify_success
+  - notify
   - deploy
 
 
@@ -32,14 +31,14 @@ update-dep:
 
 notify_fail:
   image: orvice/telegram-notify:shell
-  stage: notify_fail
+  stage: notify
   script:
     - /app/bin/notify.sh  ❌
   when: on_failure
 
 notify_success:
   image: orvice/telegram-notify:shell
-  stage: notify_success
+  stage: notify
   script:
     - /app/bin/notify.sh  ✅
   when: on_success

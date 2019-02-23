@@ -5,10 +5,11 @@ import (
 	"testing"
 )
 
-func TestGetRequestID(t *testing.T){
+func TestGetRequestID(t *testing.T) {
 	reqID := "abc"
 	ctx := context.Background()
-	ctx = ContextAddRequestID(ctx,reqID)
-
-	t.Log(RequestIDFromMetadataContext(ctx))
+	ctx = ContextAddRequestID(ctx, reqID)
+	if RequestIDFromIncomingContext(ctx) != reqID {
+		t.Error("cant get request id from conetxt")
+	}
 }

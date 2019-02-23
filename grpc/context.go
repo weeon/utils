@@ -10,7 +10,7 @@ const (
 	RequestID = "request-id"
 )
 
-func RequestIDFromMetadataContext(ctx context.Context) string {
+func RequestIDFromIncomingContext(ctx context.Context) string {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
 		return ""
@@ -28,10 +28,13 @@ func ContextAddRequestID(ctx context.Context, reqID string) context.Context {
 	if ok {
 		md[reqID] = []string{reqID}
 		ctx = metadata.NewIncomingContext(ctx, md)
+		ctx = metadata.NewOutgoingContext(ctx, md)
 		return ctx
 	}
 	md = metadata.New(map[string]string{
 		RequestID: reqID,
 	})
-	return metadata.NewIncomingContext(ctx, md)
+	ctx = metadata.NewIncomingContext(ctx, md)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	return ctx
 }
