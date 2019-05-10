@@ -2,6 +2,7 @@ package ginutil
 
 import (
 	"context"
+	"strings"
 
 	"github.com/weeon/utils"
 	"github.com/gin-gonic/gin"
@@ -35,4 +36,13 @@ func GetContext(c *gin.Context) context.Context {
 		return context.Background()
 	}
 	return v
+}
+
+func GetBearerToken(c *gin.Context) string {
+	reqToken := c.GetHeader("Authorization")
+	splitToken := strings.Split(reqToken, "Bearer")
+	if len(splitToken) > 1 {
+		return splitToken[1]
+	}
+	return ""
 }
