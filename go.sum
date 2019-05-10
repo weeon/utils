@@ -37,10 +37,6 @@ github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZN
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.3.0 h1:TivCn/peBQ7UY8ooIcPgZFpTNSz0Q2U6UrFlUfqbe0Q=
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
-github.com/ugorji/go v1.1.4 h1:j4s+tAvLfL3bZyefP2SEWmhBzmuIlH/eqNuPdFPgngw=
-github.com/ugorji/go v1.1.4/go.mod h1:uQMGLiO92mf5W77hV/PUCpI3pbzQx3CRekS0kk+RGrc=
-github.com/ugorji/go v1.1.5-0.20190507201401-08f7b401aef1 h1:ALg+62m5IHB+GknweVruLLsyTSC2sx2EtZ4o5AjNWEk=
-github.com/ugorji/go v1.1.5-0.20190507201401-08f7b401aef1/go.mod h1:CNnb6ZvPKQMR+Hz6QI76TRCBNgyJIxEmTBn+1u8HELw=
 github.com/weeon/contract v0.0.0-20190510071243-5d5297a1e668 h1:wBoshyu8674pc5utbZp5u+kNXZC24EDCaIpcmXdu+TU=
 github.com/weeon/contract v0.0.0-20190510071243-5d5297a1e668/go.mod h1:Lu4Rx+OfCPH1ljtEpsravnbAYjVCwGKYe1kd1oNIwX0=
 github.com/weeon/log v0.0.0-20190503044751-28d9bf4b0af3 h1:PygG7GpbE6q8grXpC7lFSRLjNL/nvpi4DKvrLxEoDIE=
