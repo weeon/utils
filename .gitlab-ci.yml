@@ -1,52 +1,10 @@
-image: docker:latest
-services:
-  - docker:dind
+image: golang
+
 stages:
-  - test
-  - notify
-  - deploy
+    - test
 
-
-test:
-  stage: test
-  image: golang
-  allow_failure: true
-  script:
-    - go test -v ./...
-
-coverage:
-  stage: test
-  image: golang
-  allow_failure: true
-  script:
-    - go install github.com/axw/gocov/gocov
-    - make test
-
-update-dep:
-  stage: test
-  image: golang
-  allow_failure: true
-  script:
-    - go get -u ./...
-
-notify_fail:
-  image: orvice/telegram-notify:shell
-  stage: notify
-  script:
-    - /app/bin/notify.sh  ❌
-  when: on_failure
-
-notify_success:
-  image: orvice/telegram-notify:shell
-  stage: notify
-  script:
-    - /app/bin/notify.sh  ✅
-  when: on_success
-
-
-deploy_dev:
-  image: orvice/ubuntu-base
-  stage: deploy
-  script:
-    - echo "todo"
+format:
+    stage: test
+    script:
+      - go test -v ./...
 
