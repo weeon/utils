@@ -1,4 +1,4 @@
-module git.orx.me/cat/utils
+module github.com/weeon/utils
 
 require (
 	github.com/gin-gonic/gin v1.4.0

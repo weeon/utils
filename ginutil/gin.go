@@ -3,7 +3,7 @@ package ginutil
 import (
 	"context"
 
-	"git.orx.me/cat/utils"
+	"github.com/weeon/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/weeon/contract"
 )
