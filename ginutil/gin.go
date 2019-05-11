@@ -4,9 +4,9 @@ import (
 	"context"
 	"strings"
 
-	"github.com/weeon/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/weeon/contract"
+	"github.com/weeon/utils"
 )
 
 func WrapRequestID(c *gin.Context) {
@@ -25,7 +25,7 @@ func WrapRequestID(c *gin.Context) {
 func GetRequestID(c *gin.Context) string {
 	s, ok := c.Keys[contract.RequestID].(string)
 	if !ok {
-		return "RequestNotFound"
+		return "RequestID Not Found"
 	}
 	return s
 }
@@ -38,9 +38,21 @@ func GetContext(c *gin.Context) context.Context {
 	return v
 }
 
-func GetBearerToken(c *gin.Context) string {
+func GetBearerToken(c *gin.Context, logger contract.Logger) string {
 	reqToken := c.GetHeader("Authorization")
+	if logger != nil {
+		logger.Debugw("Authorization header from request",
+			"header", reqToken,
+			contract.RequestID, GetRequestID(c),
+		)
+	}
 	splitToken := strings.Split(reqToken, "Bearer")
+	if logger != nil {
+		logger.Debugw("splitToken",
+			"splitTokenArr", splitToken,
+			contract.RequestID, GetRequestID(c),
+		)
+	}
 	if len(splitToken) > 1 {
 		return splitToken[1]
 	}
