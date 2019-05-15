@@ -34,6 +34,11 @@ func NewTask(name string, t time.Duration, fn func() error, opts ...TaskOpt) *Ta
 	return task
 }
 
+func NewTaskAndRun(name string, t time.Duration, fn func() error, opts ...TaskOpt) {
+	task := NewTask(name, t, fn, opts...)
+	go task.Run()
+}
+
 func (t *Task) run() {
 	start := time.Now()
 	err := t.fn()
