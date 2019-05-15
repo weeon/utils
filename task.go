@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"fmt"
+	"runtime/debug"
 	"time"
 
 	"github.com/weeon/contract"
@@ -32,11 +34,33 @@ func NewTask(name string, t time.Duration, fn func() error, opts ...TaskOpt) *Ta
 	return task
 }
 
+func (t *Task) run() {
+	start := time.Now()
+	err := t.fn()
+	var errMsg string
+	if err != nil {
+		errMsg = fmt.Sprintf("error %s", err.Error())
+	}
+	t.Logger.Infof("run task %s cost: %v error: %s  ", t.name, time.Since(start), errMsg)
+	time.Sleep(t.t)
+}
+
 func (t *Task) Run() {
+	timer := time.NewTimer(t.t)
+
+	defer func() {
+		if err := recover(); err != nil {
+			t.Logger.Errorf("task %s crash error: %v stack:\n%v", t.name, err, debug.Stack())
+		}
+	}()
+
+	t.run()
+
 	for {
-		start := time.Now()
-		err := t.fn()
-		t.Logger.Infof("run task %s cost: %v error: %v  ", t.name, time.Since(start), err)
-		time.Sleep(t.t)
+		select {
+		case <-timer.C:
+			t.run()
+			timer.Reset(t.t)
+		}
 	}
 }
