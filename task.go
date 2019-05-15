@@ -20,6 +20,12 @@ type Task struct {
 
 type TaskOpt func(t *Task)
 
+func SetTaskLogger(l contract.Logger) TaskOpt {
+	return func(t *Task) {
+		t.Logger = l
+	}
+}
+
 func NewTask(name string, t time.Duration, fn func() error, opts ...TaskOpt) *Task {
 	logger, _ := log.NewLogger("/dev/null", zapcore.DebugLevel)
 	task := &Task{
