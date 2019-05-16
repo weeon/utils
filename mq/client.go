@@ -11,7 +11,7 @@ type Client struct {
 	logger  contract.Logger
 }
 
-func NewClient(uri string) (*Client, error) {
+func NewClient(uri string, logger contract.Logger) (*Client, error) {
 	conn, err := amqp.Dial(uri)
 	if err != nil {
 		return nil, err
@@ -25,6 +25,7 @@ func NewClient(uri string) (*Client, error) {
 	cli := &Client{
 		conn:    conn,
 		channel: channel,
+		logger:  logger,
 	}
 
 	return cli, nil
