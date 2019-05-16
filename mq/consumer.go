@@ -77,6 +77,7 @@ func (c *Consumer) handlerWatch() {
 	for {
 		select {
 		case <-c.done:
+			c.logger.Info("reconnect...")
 			c.Do()
 		}
 	}
