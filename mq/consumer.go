@@ -20,7 +20,7 @@ type Consumer struct {
 	queueName string
 }
 
-func NewConsumer(amqpURI, queueName, ctag string, fn func([]byte), l contract.Logger) (*Consumer, error) {
+func NewConsumer(amqpURI, queueName, ctag string, fn func([]byte), l contract.Logger, debug bool) (*Consumer, error) {
 	c := &Consumer{
 		conn:      nil,
 		channel:   nil,
@@ -29,6 +29,7 @@ func NewConsumer(amqpURI, queueName, ctag string, fn func([]byte), l contract.Lo
 		logger:    l,
 		fn:        fn,
 		queueName: queueName,
+		debug:     debug,
 	}
 
 	var err error
