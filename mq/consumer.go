@@ -2,6 +2,7 @@ package mq
 
 import (
 	"fmt"
+
 	"github.com/streadway/amqp"
 	"github.com/weeon/contract"
 )
@@ -18,6 +19,7 @@ type Consumer struct {
 	logger contract.Logger
 
 	queueName string
+	uri       string
 }
 
 func NewConsumer(amqpURI, queueName, ctag string, fn func([]byte), l contract.Logger, debug bool) (*Consumer, error) {
@@ -29,25 +31,8 @@ func NewConsumer(amqpURI, queueName, ctag string, fn func([]byte), l contract.Lo
 		logger:    l,
 		fn:        fn,
 		queueName: queueName,
+		uri:       amqpURI,
 		debug:     debug,
-	}
-
-	var err error
-
-	c.logger.Infof("dialing %q", amqpURI)
-	c.conn, err = amqp.Dial(amqpURI)
-	if err != nil {
-		return nil, fmt.Errorf("Dial error : %s ", err)
-	}
-
-	go func() {
-		fmt.Printf("closing: %s", <-c.conn.NotifyClose(make(chan *amqp.Error)))
-	}()
-
-	c.logger.Info("got Connection, getting Channel")
-	c.channel, err = c.conn.Channel()
-	if err != nil {
-		return nil, fmt.Errorf("Channel: %s ", err)
 	}
 
 	go c.Do()
@@ -57,6 +42,25 @@ func NewConsumer(amqpURI, queueName, ctag string, fn func([]byte), l contract.Lo
 }
 
 func (c *Consumer) Do() {
+
+	var err error
+
+	c.logger.Infof("dialing %q", c.uri)
+	c.conn, err = amqp.Dial(c.uri)
+	if err != nil {
+		c.done <- fmt.Errorf("Dial error : %s ", err)
+	}
+
+	go func() {
+		fmt.Printf("closing: %s", <-c.conn.NotifyClose(make(chan *amqp.Error)))
+	}()
+
+	c.logger.Info("got Connection, getting Channel")
+	c.channel, err = c.conn.Channel()
+	if err != nil {
+		c.done <- fmt.Errorf("Channel: %s ", err)
+	}
+
 	c.logger.Infof("Queue bound to Exchange, starting Consume (consumer tag %q)", c.tag)
 	deliveries, err := c.channel.Consume(
 		c.queueName, // name
