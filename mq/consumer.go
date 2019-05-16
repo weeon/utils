@@ -55,7 +55,7 @@ func NewConsumer(amqpURI, queueName, ctag string, fn func([]byte), l contract.Lo
 }
 
 func (c *Consumer) Do() error {
-	c.logger.Info("Queue bound to Exchange, starting Consume (consumer tag %q)", c.tag)
+	c.logger.Infof("Queue bound to Exchange, starting Consume (consumer tag %q)", c.tag)
 	deliveries, err := c.channel.Consume(
 		c.queueName, // name
 		c.tag,       // consumerTag,
