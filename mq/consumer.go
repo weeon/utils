@@ -49,12 +49,13 @@ func NewConsumer(amqpURI, queueName, ctag string, fn func([]byte), l contract.Lo
 		return nil, fmt.Errorf("Channel: %s ", err)
 	}
 
-	c.Do()
+	go c.Do()
+	go c.handlerWatch()
 
 	return c, nil
 }
 
-func (c *Consumer) Do() error {
+func (c *Consumer) Do() {
 	c.logger.Infof("Queue bound to Exchange, starting Consume (consumer tag %q)", c.tag)
 	deliveries, err := c.channel.Consume(
 		c.queueName, // name
@@ -66,11 +67,10 @@ func (c *Consumer) Do() error {
 		nil,         // arguments
 	)
 	if err != nil {
-		return fmt.Errorf("Queue Consume fail : %s ", err)
+		c.done <- fmt.Errorf("Queue Consume fail : %s ", err)
 	}
-
+	c.logger.Info("start handle deliveries ")
 	go c.handle(deliveries, c.done)
-	return nil
 }
 
 func (c *Consumer) handlerWatch() {
