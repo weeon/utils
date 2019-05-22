@@ -61,7 +61,7 @@ func (t *Task) Run() {
 
 	defer func() {
 		if err := recover(); err != nil {
-			t.Logger.Errorf("task %s crash error: %v stack:\n%v", t.name, err, debug.Stack())
+			t.Logger.Errorf("task %s crash error: %v stack:\n %v", t.name, err, string(debug.Stack()))
 		}
 	}()
 
