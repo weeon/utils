@@ -1,6 +1,7 @@
 package grpcutil
 
 import (
+	"context"
 	"net"
 	"os"
 
@@ -8,6 +9,7 @@ import (
 	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
+	"github.com/weeon/contract"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 )
@@ -35,4 +37,8 @@ func NewServer(logger *zap.Logger, authFunc grpc_auth.AuthFunc) *grpc.Server {
 	)
 
 	return myServer
+}
+
+func WrapRequestIDAuthFunc(ctx context.Context) (context.Context, error) {
+	return context.WithValue(ctx, contract.RequestID, RequestIDFromIncomingContext(ctx)), nil
 }
