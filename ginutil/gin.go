@@ -31,7 +31,7 @@ func GetRequestID(c *gin.Context) string {
 }
 
 func SetContext(c *gin.Context, ctx context.Context) {
-	c.Request.WithContext(ctx)
+	c.Request = c.Request.WithContext(ctx)
 }
 
 func GetContext(c *gin.Context) context.Context {
