@@ -17,6 +17,7 @@ func WrapRequestID(c *gin.Context) {
 		c.Keys = make(map[string]interface{})
 	}
 	SetContext(c, ctx)
+	c.Keys[contract.RequestID] = uuid
 	c.Header(contract.RequestID, uuid)
 	c.Next()
 }
