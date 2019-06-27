@@ -3,6 +3,8 @@ package grpcutil
 import (
 	"context"
 	"github.com/weeon/contract"
+	"github.com/weeon/utils/ctxutil"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 )
 
@@ -35,3 +37,13 @@ func ContextAddRequestID(ctx context.Context, reqID string) context.Context {
 	ctx = metadata.NewOutgoingContext(ctx, md)
 	return ctx
 }
+
+// Wrap Request ID from incoming context
+func UnaryServerWrapRequestIDInterceptor() grpc.UnaryServerInterceptor {
+	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+		newCtx := ctxutil.AddRequestID(ctx,RequestIDFromIncomingContext(ctx))
+		resp, err := handler(newCtx, req)
+		return resp, err
+	}
+}
+

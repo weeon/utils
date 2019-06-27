@@ -9,6 +9,7 @@ import (
 	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
+	grpc_opentracing "github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
 	"github.com/weeon/contract"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -25,17 +26,19 @@ func ListenerFromEnv() (net.Listener, error) {
 func NewServer(logger *zap.Logger, authFunc grpc_auth.AuthFunc) *grpc.Server {
 	myServer := grpc.NewServer(
 		grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(
+			grpc_opentracing.StreamServerInterceptor(),
 			grpc_zap.StreamServerInterceptor(logger),
 			grpc_auth.StreamServerInterceptor(authFunc),
 			grpc_recovery.StreamServerInterceptor(),
 		)),
 		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
+			grpc_opentracing.UnaryServerInterceptor(),
 			grpc_zap.UnaryServerInterceptor(logger),
 			grpc_auth.UnaryServerInterceptor(authFunc),
 			grpc_recovery.UnaryServerInterceptor(),
+			UnaryServerWrapRequestIDInterceptor(),
 		)),
 	)
-
 	return myServer
 }
 

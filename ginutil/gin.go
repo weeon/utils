@@ -11,13 +11,12 @@ import (
 
 func WrapRequestID(c *gin.Context) {
 	uuid := utils.NewUUID()
-	ctx := context.Background()
+	ctx := c.Request.Context()
 	ctx = context.WithValue(ctx, contract.RequestID, uuid)
 	if c.Keys == nil {
 		c.Keys = make(map[string]interface{})
 	}
-	c.Keys[contract.Context] = ctx
-	c.Keys[contract.RequestID] = uuid
+	SetContext(c, ctx)
 	c.Header(contract.RequestID, uuid)
 	c.Next()
 }
@@ -30,12 +29,12 @@ func GetRequestID(c *gin.Context) string {
 	return s
 }
 
+func SetContext(c *gin.Context, ctx context.Context) {
+	c.Request.WithContext(ctx)
+}
+
 func GetContext(c *gin.Context) context.Context {
-	v, ok := c.Keys[contract.Context].(context.Context)
-	if !ok {
-		return context.Background()
-	}
-	return v
+	return c.Request.Context()
 }
 
 func GetBearerToken(c *gin.Context, logger contract.Logger) string {
