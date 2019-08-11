@@ -54,7 +54,7 @@ func GetBearerToken(c *gin.Context, logger contract.Logger) string {
 		)
 	}
 	if len(splitToken) > 1 {
-		return splitToken[1]
+		return strings.TrimSpace(splitToken[1])
 	}
 	return ""
 }
