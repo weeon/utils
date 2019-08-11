@@ -7,12 +7,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/weeon/contract"
 	"github.com/weeon/utils"
+	"github.com/weeon/utils/grpcutil"
 )
 
 func WrapRequestID(c *gin.Context) {
 	uuid := utils.NewUUID()
 	ctx := c.Request.Context()
 	ctx = context.WithValue(ctx, contract.RequestID, uuid)
+	ctx = grpcutil.ContextAddRequestID(ctx, uuid)
 	if c.Keys == nil {
 		c.Keys = make(map[string]interface{})
 	}
