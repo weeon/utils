@@ -17,7 +17,7 @@ func AddExitFuncs(fns ...func()) {
 
 func WaitSignal() {
 	sigs := make(chan os.Signal, 1)
-	signal.Notify(sigs, os.Interrupt, os.Kill, syscall.SIGUSR1, syscall.SIGUSR2)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 	sig := <-sigs
 	log.Infof("recv signal %v", sig)
 	for _, fn := range exitFuncs {

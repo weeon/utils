@@ -6,6 +6,7 @@ require (
 	github.com/gogo/protobuf v1.2.1 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.0.0
 	github.com/kr/pretty v0.1.0 // indirect
+	github.com/opentracing/opentracing-go v1.1.0 // indirect
 	github.com/sirupsen/logrus v1.4.2 // indirect
 	github.com/streadway/amqp v0.0.0-20190404075320-75d898a42a94
 	github.com/ugorji/go v1.1.5-0.20190507201401-08f7b401aef1 // indirect
@@ -15,3 +16,5 @@ require (
 	google.golang.org/grpc v1.18.0
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 )
+
+go 1.13
