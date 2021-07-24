@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-func GetEvn(key string, df ...string) string {
+func GetEnv(key string, df ...string) string {
 	v := os.Getenv(key)
 	if len(v) == 0 && len(df) != 0 {
 		return df[0]
