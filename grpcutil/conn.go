@@ -23,21 +23,27 @@ func ListenerFromEnv() (net.Listener, error) {
 	return net.Listen("tcp", addr)
 }
 
-func NewServer(logger *zap.Logger, authFunc grpc_auth.AuthFunc) *grpc.Server {
-	myServer := grpc.NewServer(
-		grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(
-			grpc_opentracing.StreamServerInterceptor(),
-			grpc_zap.StreamServerInterceptor(logger),
-			grpc_auth.StreamServerInterceptor(authFunc),
-			grpc_recovery.StreamServerInterceptor(),
-		)),
+func NewServer(logger *zap.Logger, authFunc grpc_auth.AuthFunc, opt ...grpc.ServerOption) *grpc.Server {
+	opts := make([]grpc.ServerOption, 0)
+	opts = append(opts, grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(
+		grpc_opentracing.StreamServerInterceptor(),
+		grpc_zap.StreamServerInterceptor(logger),
+		grpc_auth.StreamServerInterceptor(authFunc),
+		grpc_recovery.StreamServerInterceptor(),
+	)),
 		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
 			grpc_opentracing.UnaryServerInterceptor(),
 			grpc_zap.UnaryServerInterceptor(logger),
 			grpc_auth.UnaryServerInterceptor(authFunc),
 			grpc_recovery.UnaryServerInterceptor(),
 			UnaryServerWrapRequestIDInterceptor(),
-		)),
+		)))
+	if opt != nil {
+		opts = append(opts, opt...)
+	}
+
+	myServer := grpc.NewServer(
+		opts...,
 	)
 	return myServer
 }
