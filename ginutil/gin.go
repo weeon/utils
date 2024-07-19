@@ -2,6 +2,7 @@ package ginutil
 
 import (
 	"context"
+	"log/slog"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -40,17 +41,18 @@ func GetContext(c *gin.Context) context.Context {
 	return c.Request.Context()
 }
 
-func GetBearerToken(c *gin.Context, logger contract.Logger) string {
+func GetBearerToken(c *gin.Context) string {
+	logger := slog.Default()
 	reqToken := c.GetHeader("Authorization")
 	if logger != nil {
-		logger.Debugw("Authorization header from request",
+		logger.Debug("Authorization header from request",
 			"header", reqToken,
 			contract.RequestID, GetRequestID(c),
 		)
 	}
 	splitToken := strings.Split(reqToken, "Bearer")
 	if logger != nil {
-		logger.Debugw("splitToken",
+		logger.Debug("splitToken",
 			"splitTokenArr", splitToken,
 			contract.RequestID, GetRequestID(c),
 		)
